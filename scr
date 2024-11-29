@@ -1,0 +1,88 @@
+CREATE DATABASE LojaEletronicos;
+USE LojaEletronicos;
+
+-- Criação da tabela de produtos
+CREATE TABLE Produtos (
+    id_produto INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    preco DECIMAL(10, 2) NOT NULL,
+    estoque INT NOT NULL
+);
+
+-- Criação da tabela de fornecedores
+CREATE TABLE Fornecedores (
+    id_fornecedor INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    contato VARCHAR(100)
+);
+
+-- Criação da tabela de compras
+CREATE TABLE Compras (
+    id_compra INT AUTO_INCREMENT PRIMARY KEY,
+    id_fornecedor INT NOT NULL,
+    data_compra DATE NOT NULL,
+    FOREIGN KEY (id_fornecedor) REFERENCES Fornecedores(id_fornecedor)
+);
+
+-- Criação da tabela de itens de compra
+CREATE TABLE ItensCompra (
+    id_item INT AUTO_INCREMENT PRIMARY KEY,
+    id_compra INT NOT NULL,
+    id_produto INT NOT NULL,
+    quantidade INT NOT NULL,
+    FOREIGN KEY (id_compra) REFERENCES Compras(id_compra),
+    FOREIGN KEY (id_produto) REFERENCES Produtos(id_produto)
+);
+
+-- Inserção de dados para produtos
+INSERT INTO Produtos (nome, preco, estoque) VALUES
+('Smartphone', 1500.00, 20),
+('Laptop', 3500.00, 10),
+('Tablet', 1200.00, 15),
+('Monitor', 800.00, 25),
+('Teclado', 150.00, 50),
+('Mouse', 100.00, 60);
+
+-- Inserção de dados para fornecedores
+INSERT INTO Fornecedores (nome, contato) VALUES
+('TechDistribuidora', 'tech@distribuidora.com'),
+('EletronicPlus', 'contato@eletronicplus.com'),
+('Gadgets&Co', 'info@gadgetsco.com');
+
+-- Inserção de dadoss para compras
+INSERT INTO Compras (id_fornecedor, data_compra) VALUES
+(1, '2024-11-20'),
+(2, '2024-11-25');
+
+-- Inserção de dados para itens de compra
+INSERT INTO ItensCompra (id_compra, id_produto, quantidade) VALUES
+(1, 1, 5),
+(1, 2, 3),
+(2, 3, 10),
+(2, 4, 7);
+
+-- Consulta para listar todos os produtos com seus respectivos fornecedores
+SELECT 
+    Produtos.nome AS NomeProduto, 
+    Fornecedores.nome AS NomeFornecedor
+FROM 
+    ItensCompra
+JOIN 
+    Compras ON ItensCompra.id_compra = Compras.id_compra
+JOIN 
+    Produtos ON ItensCompra.id_produto = Produtos.id_produto
+JOIN 
+    Fornecedores ON Compras.id_fornecedor = Fornecedores.id_fornecedor;
+
+-- Consulta para mostrar o total de itens comprados por fornecedor
+SELECT 
+    Fornecedores.nome AS NomeFornecedor, 
+    SUM(ItensCompra.quantidade) AS TotalItensComprados
+FROM 
+    ItensCompra
+JOIN 
+    Compras ON ItensCompra.id_compra = Compras.id_compra
+JOIN 
+    Fornecedores ON Compras.id_fornecedor = Fornecedores.id_fornecedor
+GROUP BY 
+    Fornecedores.nome;

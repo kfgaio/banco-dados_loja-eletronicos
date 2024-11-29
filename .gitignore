@@ -1,0 +1,29 @@
+# Arquivos comuns a serem ignorados em projetos gerais
+*.log
+*.tmp
+*.bak
+*.swp
+.DS_Store
+Thumbs.db
+
+# Banco de dados temporários ou de desenvolvimento
+*.sqlite
+*.db
+
+# Configurações locais de IDEs
+.vscode/
+.idea/
+*.iml
+
+# Arquivos gerados por logs de execução
+*.out
+*.err
+
+# Backups de scripts SQL
+*.sql~
+
+# Especificamente para projetos SQL
+*.csv
+*.xlsx
+*.xls
+*.ods
